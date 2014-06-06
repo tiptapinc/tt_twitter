@@ -4,7 +4,6 @@
 Copyright (c) 2014 tiptap. All rights reserved.
 
 """
-import json
 import time
 import traceback
 import twython
@@ -152,7 +151,6 @@ class TwitterClient(object):
         params = dict(resources=",".join(RATE_LIMIT_RESOURCES))
         body = self.twitter.get_application_rate_limit_status(**params)
 
-        log.info("body:%s" % json.dumps(body, indent=4))
         self.limits = {}
         for resource in body['resources'].keys():
             self.limits[resource] = {}
@@ -165,7 +163,6 @@ class TwitterClient(object):
                     limit=methodLimits['limit']
                 )
 
-        log.info("limits:%s" % json.dumps(self.limits, indent=4))
         self.timeMargin = margins['timeMargin']
         self.countMargin = margins['countMargin']
 
