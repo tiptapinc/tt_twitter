@@ -73,12 +73,12 @@ class TwitterClient(object):
 
         params = {}
         if twitterIds:
-            params['user_id'] = ",".join(twitterIds))
+            params['user_id'] = ",".join(twitterIds)
 
         if twitterNames:
-            params['screen_name'] = ",".join(twitterNames))
+            params['screen_name'] = ",".join(twitterNames)
 
-        if !twitterIds and !twitterNames:
+        if not twitterIds and not twitterNames:
             log.info("lookup_user needs twitterIds or twitterNames")
 
         log.info("lookup_users, params: %s" % params)
