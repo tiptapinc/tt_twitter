@@ -71,11 +71,14 @@ class TwitterClient(object):
         resource = "users"
         method = "lookup"
 
+        params = {}
         if twitterIds:
-            params = dict(user_id=",".join(twitterIds))
-        elif twitterNames:
-            params = dict(screen_name=",".join(twitterNames))
-        else:
+            params['user_id'] = ",".join(twitterIds))
+
+        if twitterNames:
+            params['screen_name'] = ",".join(twitterNames))
+
+        if !twitterIds and !twitterNames:
             log.info("lookup_user needs twitterIds or twitterNames")
 
         log.info("lookup_users, params: %s" % params)
