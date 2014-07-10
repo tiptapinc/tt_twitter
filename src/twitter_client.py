@@ -11,7 +11,7 @@ import twython
 import logging
 log = logging.getLogger(__name__)
 
-RATE_LIMIT_RESOURCES = ["statuses", "followers", "users"]
+RATE_LIMIT_RESOURCES = ["statuses", "followers", "search", "users"]
 
 
 class TwitterClient(object):
@@ -103,6 +103,21 @@ class TwitterClient(object):
         log.info("show_users, params: %s" % params)
         return self._do_twitter(
             self.twitter.show_user,
+            resource,
+            method,
+            **params
+        )
+
+    def search(self, query, **kwargs):
+        resource = "search"
+        method = "tweets"
+
+        params = dict(q=query)
+        params.update(kwargs)
+
+        log.info("search, params: %s" % params)
+        return self._do_twitter(
+            self.twitter.search,
             resource,
             method,
             **params

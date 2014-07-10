@@ -1,3 +1,6 @@
+## v0.0.5
+* added "search" method
+
 ## v0.0.4
 
 * lookup_user can have both user_id & screen_name parameters in a single call
