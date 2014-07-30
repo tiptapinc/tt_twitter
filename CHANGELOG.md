@@ -1,3 +1,6 @@
+## v0.0.6
+* added "limit" field to return value from "get_rate_limits"
+
 ## v0.0.5
 * added "search" method
 

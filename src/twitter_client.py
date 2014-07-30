@@ -158,7 +158,8 @@ class TwitterClient(object):
 
         return dict(
             remaining=(limits['remaining'] - self.countMargin),
-            reset=(limits['reset'] + self.timeMargin)
+            reset=(limits['reset'] + self.timeMargin),
+            limit=limits['limit']
         )
 
     def _init_rate_limits(self, margins):
