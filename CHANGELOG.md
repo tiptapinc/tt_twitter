@@ -1,3 +1,6 @@
+## v0.0.7
+* added **kwargs to arguments for "get_followers_ids"
+
 ## v0.0.6
 * added "limit" field to return value from "get_rate_limits"
 

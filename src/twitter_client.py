@@ -51,7 +51,7 @@ class TwitterClient(object):
             **params
         )
 
-    def get_followers_ids(self, twitterName, count):
+    def get_followers_ids(self, twitterName, count, **kwargs):
         resource = "followers"
         method = "ids"
 
@@ -59,6 +59,8 @@ class TwitterClient(object):
             screen_name=twitterName,
             count=count
         )
+        params.update(kwargs)
+
         log.info("get_followers_ids, params: %s" % params)
         return self._do_twitter(
             self.twitter.get_followers_ids,
