@@ -1,3 +1,6 @@
+## v0.0.8
+* set requests timeout when initializing Twython
+
 ## v0.0.7
 * added **kwargs to arguments for "get_followers_ids"
 

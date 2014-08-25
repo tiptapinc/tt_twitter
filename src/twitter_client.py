@@ -21,7 +21,8 @@ class TwitterClient(object):
 
         self.twitter = twython.Twython(
             self.appKey,
-            access_token=self.accessToken
+            access_token=self.accessToken,
+            client_args=dict(timeout=30)
         )
         self._init_rate_limits(margins)
 
