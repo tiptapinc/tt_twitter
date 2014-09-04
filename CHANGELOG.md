@@ -1,3 +1,9 @@
+## v0.0.10
+* create new Twython instance for every call
+
+## v0.0.9
+* fix error handling for _do_twitter unexpected error condition
+
 ## v0.0.8
 * set requests timeout when initializing Twython
 

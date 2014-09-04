@@ -26,14 +26,13 @@ class TwitterClient(object):
         )
         self._init_rate_limits(margins)
 
-    def get_user_timeline(self, twitterId, twitterName, count=200, maxId=None):
-        resource = "statuses"
-        method = "user_timeline"
-
+    def get_user_timeline(self, twitterId, twitterName,
+                          count=200, maxId=None):
         params = dict(
             count=count,
             include_rts="false"
         )
+
         if twitterId:
             params['user_id'] = twitterId
         elif twitterName:
@@ -46,16 +45,13 @@ class TwitterClient(object):
 
         log.info("get_user_timeline, params: %s" % params)
         return self._do_twitter(
-            self.twitter.get_user_timeline,
-            resource,
-            method,
+            "get_user_timeline",
+            "statuses",
+            "user_timeline",
             **params
         )
 
     def get_followers_ids(self, twitterName, count, **kwargs):
-        resource = "followers"
-        method = "ids"
-
         params = dict(
             screen_name=twitterName,
             count=count
@@ -64,16 +60,13 @@ class TwitterClient(object):
 
         log.info("get_followers_ids, params: %s" % params)
         return self._do_twitter(
-            self.twitter.get_followers_ids,
-            resource,
-            method,
+            "get_followers_ids",
+            "followers",
+            "ids",
             **params
         )
 
     def lookup_user(self, twitterIds, twitterNames):
-        resource = "users"
-        method = "lookup"
-
         params = {}
         if twitterIds:
             params['user_id'] = ",".join(twitterIds)
@@ -86,16 +79,13 @@ class TwitterClient(object):
 
         log.info("lookup_users, params: %s" % params)
         return self._do_twitter(
-            self.twitter.lookup_user,
-            resource,
-            method,
+            "lookup_user",
+            "users",
+            "lookup",
             **params
         )
 
     def show_user(self, twitterId, twitterName):
-        resource = "users"
-        method = "show"
-
         if twitterId:
             params = dict(user_id=twitterId)
         elif twitterName:
@@ -105,32 +95,37 @@ class TwitterClient(object):
 
         log.info("show_users, params: %s" % params)
         return self._do_twitter(
-            self.twitter.show_user,
-            resource,
-            method,
+            "show_user",
+            "users",
+            "show",
             **params
         )
 
     def search(self, query, **kwargs):
-        resource = "search"
-        method = "tweets"
-
         params = dict(q=query)
         params.update(kwargs)
 
         log.info("search, params: %s" % params)
         return self._do_twitter(
-            self.twitter.search,
-            resource,
-            method,
+            "search",
+            "search",
+            "tweets",
             **params
         )
 
-    def _do_twitter(self, function, resource, method, **params):
+    def _do_twitter(self, functionName, resource, method, **params):
         if self.limits[resource][method]['remaining'] <= 0:
             return 429, None
 
+        apiClient = twython.Twython(
+            app_key=self.appKey,
+            access_token=self.accessToken,
+            client_args=dict(timeout=30)
+        )
+
+        function = getattr(apiClient, functionName)
         result = None
+
         try:
             result = function(**params)
             resultCode = 200
@@ -148,9 +143,8 @@ class TwitterClient(object):
                 "unexpected error accessing Twitter API, %s" %
                 traceback.format_exc()
             )
-            resultCode = error.error_code
 
-        self._update_rate_limit(resource, method)
+        self._update_rate_limit(apiClient, resource, method)
         return resultCode, result
 
     def get_rate_limits(self, resource, method):
@@ -166,8 +160,14 @@ class TwitterClient(object):
         )
 
     def _init_rate_limits(self, margins):
+        apiClient = twython.Twython(
+            app_key=self.appKey,
+            access_token=self.accessToken,
+            client_args=dict(timeout=30)
+        )
+
         params = dict(resources=",".join(RATE_LIMIT_RESOURCES))
-        body = self.twitter.get_application_rate_limit_status(**params)
+        body = apiClient.get_application_rate_limit_status(**params)
 
         self.limits = {}
         for resource in body['resources'].keys():
@@ -184,15 +184,15 @@ class TwitterClient(object):
         self.timeMargin = margins['timeMargin']
         self.countMargin = margins['countMargin']
 
-    def _update_rate_limit(self, resource, method):
+    def _update_rate_limit(self, apiClient, resource, method):
         limits = self.limits[resource][method]
-        header = self.twitter.get_lastfunction_header(
+        header = apiClient.get_lastfunction_header(
             'x-rate-limit-remaining'
         )
         if header:
             limits['remaining'] = int(header)
 
-        header = self.twitter.get_lastfunction_header(
+        header = apiClient.get_lastfunction_header(
             'x-rate-limit-reset'
         )
         if header:
