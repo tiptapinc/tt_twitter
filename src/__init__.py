@@ -1,1 +1,1 @@
-from twitter_client import TwitterClient
+from .twitter_client import TwitterClient

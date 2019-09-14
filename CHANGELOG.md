@@ -1,3 +1,6 @@
+## v0.0.12
+* added support for python 3
+
 ## v0.0.10
 * create new Twython instance for every call
 
