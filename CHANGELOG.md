@@ -1,3 +1,7 @@
+## v0.0.11:
+* pass **kwargs to get_user_timeline
+* set 'tweet_mode' to 'extended' in get_user_timeline
+
 ## v0.0.10
 * create new Twython instance for every call
 
