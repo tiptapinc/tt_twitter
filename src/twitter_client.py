@@ -26,12 +26,12 @@ class TwitterClient(object):
         )
         self._init_rate_limits(margins)
 
-    def get_user_timeline(self, twitterId, twitterName,
-                          count=200, maxId=None):
-        params = dict(
-            count=count,
-            include_rts="false"
-        )
+    def get_user_timeline(self, twitterId, twitterName, **kwargs):
+        params = {k: v for k, v in kwargs.iteritems() if v}
+
+        params['count'] = params.get('count') or 200
+        params['include_rts'] = "false"
+        params['tweet_mode'] = "extended"
 
         if twitterId:
             params['user_id'] = twitterId
@@ -39,9 +39,6 @@ class TwitterClient(object):
             params['screen_name'] = twitterName
         else:
             log.info("get_user_timeline needs twitterId or twitterName")
-
-        if maxId:
-            params['max_id'] = maxId
 
         log.info("get_user_timeline, params: %s" % params)
         return self._do_twitter(
