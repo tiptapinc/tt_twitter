@@ -1,3 +1,6 @@
+## v0.0.13
+* replace .iteritems method with .items (python 3 fix)
+
 ## v0.0.12
 * added support for python 3
 

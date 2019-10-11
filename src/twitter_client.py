@@ -27,7 +27,7 @@ class TwitterClient(object):
         self._init_rate_limits(margins)
 
     def get_user_timeline(self, twitterId, twitterName, **kwargs):
-        params = {k: v for k, v in kwargs.iteritems() if v}
+        params = {k: v for k, v in kwargs.items() if v}
 
         params['count'] = params.get('count') or 200
         params['include_rts'] = "false"
