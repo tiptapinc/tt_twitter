@@ -12,6 +12,5 @@ setup(
     version=open('VERSION').read().strip(),
     author='TipTap',
     install_requires=['twython'],
-    package_dir={'tt_twitter': 'src'},
     packages=['tt_twitter']
 )
